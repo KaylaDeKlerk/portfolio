@@ -12,38 +12,51 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .liquid-glass {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background-color: rgba(26, 32, 44, 0.7); /* A semi-transparent dark grey */
         }
     </style>
 </head>
 <body class="bg-neutral-900 text-gray-200 flex flex-col items-center min-h-screen">
 
-    <main class="w-full bg-neutral-800 rounded-none shadow-lg p-6 md:p-10 text-center mb-6">
-        <h1 class="text-3xl md:text-5xl font-bold mb-2 text-white">Kayla de Klerk</h1>
-        <p class="text-xl md:text-2xl font-medium mb-6 text-gray-400">Graphic Designer Portfolio</p>
+    <!-- Sticky Header with Liquid Glass Effect -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-10 transition-opacity duration-300">
+        <main class="w-full liquid-glass rounded-none shadow-lg p-6 md:p-10 text-center">
+            <h1 class="text-3xl md:text-5xl font-bold mb-2 text-white">Kayla de Klerk</h1>
+            <p class="text-xl md:text-2xl font-medium mb-6 text-gray-400">Graphic Designer Portfolio</p>
 
-        <div class="flex flex-col md:flex-row justify-center items-center gap-4">
-            <button id="download-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
-                Download Full Portfolio
-            </button>
-            <p class="text-sm text-gray-500 mt-2 md:mt-0">Click the button to download all pages as one PDF.</p>
-        </div>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+                <button id="download-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
+                    Download Full Portfolio
+                </button>
+                <p class="text-sm text-gray-500 mt-2 md:mt-0">Click the button to download all pages as one PDF.</p>
+            </div>
 
-        <!-- Scaling Controls -->
-        <div class="mt-6 flex flex-col md:flex-row justify-center items-center gap-2 text-sm text-gray-400">
-            <span>Scale:</span>
-            <button id="scale-100-btn" class="py-1 px-3 rounded-full border border-gray-600 hover:bg-neutral-700 transition-colors duration-300">100%</button>
-            <button id="scale-75-btn" class="py-1 px-3 rounded-full border border-gray-600 hover:bg-neutral-700 transition-colors duration-300">75%</button>
-            <button id="scale-50-btn" class="py-1 px-3 rounded-full border border-gray-600 hover:bg-neutral-700 transition-colors duration-300">50%</button>
-        </div>
-    </main>
+            <!-- Scaling Controls -->
+            <div class="mt-6 flex flex-col md:flex-row justify-center items-center gap-2 text-sm text-gray-400">
+                <span>Scale:</span>
+                <button id="scale-100-btn" class="py-1 px-3 rounded-full border border-gray-600 hover:bg-neutral-700 transition-colors duration-300">100%</button>
+                <button id="scale-75-btn" class="py-1 px-3 rounded-full border border-gray-600 hover:bg-neutral-700 transition-colors duration-300">75%</button>
+                <button id="scale-50-btn" class="py-1 px-3 rounded-full border border-gray-600 hover:bg-neutral-700 transition-colors duration-300">50%</button>
+            </div>
+        </main>
+    </header>
     
+    <!-- Spacer to push content below the fixed header -->
+    <div class="h-[250px] md:h-[220px]"></div>
+
     <!-- Container for the PNG portfolio pages -->
     <div id="portfolio-container" class="w-full flex flex-col items-center">
         <!-- Images will be dynamically loaded here -->
     </div>
 
     <script>
-        const { PDFDocument, rgb } = PDFLib;
+        const { PDFDocument } = PDFLib;
 
         // --- Updated to include 32 PNG images ---
         const portfolioPages = [];
@@ -57,7 +70,7 @@
             const container = document.getElementById('portfolio-container');
             portfolioPages.forEach(page => {
                 const img = document.createElement('img');
-                img.src = `portfolioImages/${page}`; // Updated path to portfolioImages folder
+                img.src = `portfolioImages/${page}`;
                 img.alt = `Portfolio Page ${page}`;
                 img.classList.add('w-full', 'mb-0', 'p-0', 'rounded-none');
                 container.appendChild(img);
@@ -82,7 +95,7 @@
                     const imageBytes = await response.arrayBuffer();
                     const image = await combinedPdf.embedPng(imageBytes);
                     
-                    const page = combinedPdf.addPage([image.width, image.height]); // Match page size to image size
+                    const page = combinedPdf.addPage([image.width, image.height]);
                     page.drawImage(image, {
                         x: 0,
                         y: 0,
@@ -100,12 +113,11 @@
 
             } catch (error) {
                 console.error('Error combining images into PDF:', error);
-                // Use a custom message box instead of alert()
                 const messageBox = document.createElement('div');
                 messageBox.textContent = 'An error occurred while creating the PDF. Please ensure all image files are available.';
                 messageBox.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #f8d7da; color: #721c24; padding: 1rem; border: 1px solid #f5c6cb; border-radius: 0.5rem; z-index: 1000;';
                 document.body.appendChild(messageBox);
-                setTimeout(() => messageBox.remove(), 5000); // Remove after 5 seconds
+                setTimeout(() => messageBox.remove(), 5000);
             } finally {
                 downloadBtn.textContent = 'Download Full Portfolio';
                 downloadBtn.disabled = false;
@@ -117,15 +129,24 @@
             const images = document.querySelectorAll('#portfolio-container img');
             images.forEach(img => {
                 img.style.width = `${percentage}%`;
-                img.style.maxWidth = `${percentage}%`; // Ensure it doesn't exceed a smaller percentage on resize
+                img.style.maxWidth = `${percentage}%`;
             });
         }
 
-        // Load images on page load
+        // Function to handle scroll-based fade
+        function handleScroll() {
+            const header = document.getElementById('main-header');
+            const scrollY = window.scrollY;
+            const fadeThreshold = 200; // Adjust this value to control how quickly it fades
+            const opacity = Math.max(0, 1 - scrollY / fadeThreshold);
+            header.style.opacity = opacity;
+        }
+
+        // Load images and set up scroll listener on page load
         window.onload = () => {
             loadPortfolioImages();
-            // Set initial scale to 100% after images are loaded
-            setScale(100);
+            setScale(50);
+            window.addEventListener('scroll', handleScroll);
         };
 
         // Add event listener to the main download button
