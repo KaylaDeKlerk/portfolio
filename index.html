@@ -15,7 +15,7 @@
         }
         .portfolio-frame {
             width: 100%;
-            height: 100vh; /* Set a fixed height for each iframe */
+            height: 100vh;
             max-width: 1000px;
             object-fit: contain;
         }
@@ -36,36 +36,19 @@
     </main>
     
     <!-- Container for the PDF viewers -->
-    <div class="w-full flex flex-col items-center gap-6">
+    <div class="w-full flex flex-col items-center">
         <!-- PDF Viewer for Part 1 -->
-        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
-            <iframe id="part1-viewer" class="portfolio-frame rounded-lg" src="portfolio-part1.pdf.pdf" frameborder="0"></iframe>
-        </div>
-
+        <iframe id="part1-viewer" class="portfolio-frame" src="portfolio-part1.pdf.pdf" frameborder="0"></iframe>
         <!-- PDF Viewer for Part 2 -->
-        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
-            <iframe id="part2-viewer" class="portfolio-frame rounded-lg" src="portfolio-part2.pdf.pdf" frameborder="0"></iframe>
-        </div>
-        
+        <iframe id="part2-viewer" class="portfolio-frame" src="portfolio-part2.pdf.pdf" frameborder="0"></iframe>
         <!-- PDF Viewer for Part 3 -->
-        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
-            <iframe id="part3-viewer" class="portfolio-frame rounded-lg" src="portfolio-part3.pdf.pdf" frameborder="0"></iframe>
-        </div>
-
+        <iframe id="part3-viewer" class="portfolio-frame" src="portfolio-part3.pdf.pdf" frameborder="0"></iframe>
         <!-- PDF Viewer for Part 4 -->
-        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
-            <iframe id="part4-viewer" class="portfolio-frame rounded-lg" src="portfolio-part4.pdf.pdf" frameborder="0"></iframe>
-        </div>
-
+        <iframe id="part4-viewer" class="portfolio-frame" src="portfolio-part4.pdf.pdf" frameborder="0"></iframe>
         <!-- PDF Viewer for Part 5 -->
-        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
-            <iframe id="part5-viewer" class="portfolio-frame rounded-lg" src="portfolio-part5.pdf.pdf" frameborder="0"></iframe>
-        </div>
-
+        <iframe id="part5-viewer" class="portfolio-frame" src="portfolio-part5.pdf.pdf" frameborder="0"></iframe>
         <!-- PDF Viewer for Part 6 -->
-        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
-            <iframe id="part6-viewer" class="portfolio-frame rounded-lg" src="portfolio-part6.pdf.pdf" frameborder="0"></iframe>
-        </div>
+        <iframe id="part6-viewer" class="portfolio-frame" src="portfolio-part6.pdf.pdf" frameborder="0"></iframe>
     </div>
 
     <script>
