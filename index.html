@@ -25,18 +25,54 @@
         <h1 class="text-3xl md:text-5xl font-bold mb-2">Kayla de Klerk</h1>
         <p class="text-xl md:text-2xl font-medium mb-6 text-gray-600">Graphic Designer Portfolio</p>
 
+        <!-- Navigation for multiple PDFs -->
+        <nav class="flex justify-center flex-wrap gap-2 mb-6">
+            <button onclick="showPortfolio('portfolio-part1.pdf')" class="portfolio-nav-button bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300">
+                Part 1
+            </button>
+            <button onclick="showPortfolio('portfolio-part2.pdf')" class="portfolio-nav-button bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition-colors duration-300">
+                Part 2
+            </button>
+            <button onclick="showPortfolio('portfolio-part3.pdf')" class="portfolio-nav-button bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition-colors duration-300">
+                Part 3
+            </button>
+        </nav>
+
         <!-- Container for the PDF viewer -->
         <div class="flex justify-center mb-6">
-            <iframe class="portfolio-frame rounded-lg" src="portfolio.pdf" frameborder="0"></iframe>
+            <iframe id="portfolio-viewer" class="portfolio-frame rounded-lg" src="portfolio-part1.pdf" frameborder="0"></iframe>
         </div>
 
         <div class="flex flex-col md:flex-row justify-center items-center gap-4">
-            <a href="portfolio.pdf" download class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
+            <a id="download-link" href="portfolio-part1.pdf" download class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
                 Download Portfolio PDF
             </a>
             <p class="text-sm text-gray-500 mt-2 md:mt-0">Right-click the button to save the PDF.</p>
         </div>
     </main>
+
+    <script>
+        function showPortfolio(pdfUrl) {
+            const viewer = document.getElementById('portfolio-viewer');
+            const downloadLink = document.getElementById('download-link');
+            const buttons = document.querySelectorAll('.portfolio-nav-button');
+
+            // Update the iframe and download link
+            viewer.src = pdfUrl;
+            downloadLink.href = pdfUrl;
+
+            // Update button styles to show which one is active
+            buttons.forEach(button => {
+                if (button.getAttribute('onclick').includes(pdfUrl)) {
+                    button.classList.add('bg-indigo-500', 'hover:bg-indigo-600', 'text-white');
+                    button.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'text-gray-800');
+                } else {
+                    button.classList.remove('bg-indigo-500', 'hover:bg-indigo-600', 'text-white');
+                    button.classList.add('bg-gray-300', 'hover:bg-gray-400', 'text-gray-800');
+                }
+            });
+        }
+    </script>
 
 </body>
 </html>
