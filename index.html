@@ -15,44 +15,17 @@
         }
         .portfolio-frame {
             width: 100%;
-            height: 80vh;
+            height: 100vh; /* Set a fixed height for each iframe */
             max-width: 1000px;
             object-fit: contain;
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 text-gray-800 flex flex-col items-center min-h-screen p-4">
 
-    <main class="w-full max-w-5xl bg-white rounded-xl shadow-lg p-6 md:p-10 text-center">
+    <main class="w-full max-w-5xl bg-white rounded-xl shadow-lg p-6 md:p-10 text-center mb-6">
         <h1 class="text-3xl md:text-5xl font-bold mb-2">Kayla de Klerk</h1>
         <p class="text-xl md:text-2xl font-medium mb-6 text-gray-600">Graphic Designer Portfolio</p>
-
-        <!-- Navigation for multiple PDFs -->
-        <nav class="flex justify-center flex-wrap gap-2 mb-6">
-            <button id="part1-btn" onclick="showPortfolio('portfolio-part1.pdf')" class="portfolio-nav-button bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300">
-                Part 1
-            </button>
-            <button id="part2-btn" onclick="showPortfolio('portfolio-part2.pdf')" class="portfolio-nav-button bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition-colors duration-300">
-                Part 2
-            </button>
-            <button id="part3-btn" onclick="showPortfolio('portfolio-part3.pdf')" class="portfolio-nav-button bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition-colors duration-300">
-                Part 3
-            </button>
-            <button id="part4-btn" onclick="showPortfolio('portfolio-part4.pdf')" class="portfolio-nav-button bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition-colors duration-300">
-                Part 4
-            </button>
-            <button id="part5-btn" onclick="showPortfolio('portfolio-part5.pdf')" class="portfolio-nav-button bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition-colors duration-300">
-                Part 5
-            </button>
-            <button id="part6-btn" onclick="showPortfolio('portfolio-part6.pdf')" class="portfolio-nav-button bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition-colors duration-300">
-                Part 6
-            </button>
-        </nav>
-
-        <!-- Container for the PDF viewer -->
-        <div class="flex justify-center mb-6">
-            <iframe id="portfolio-viewer" class="portfolio-frame rounded-lg" src="" frameborder="0"></iframe>
-        </div>
 
         <div class="flex flex-col md:flex-row justify-center items-center gap-4">
             <button id="download-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
@@ -61,37 +34,50 @@
             <p class="text-sm text-gray-500 mt-2 md:mt-0">Click the button to download all PDFs as one file.</p>
         </div>
     </main>
+    
+    <!-- Container for the PDF viewers -->
+    <div class="w-full flex flex-col items-center gap-6">
+        <!-- PDF Viewer for Part 1 -->
+        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
+            <iframe id="part1-viewer" class="portfolio-frame rounded-lg" src="portfolio-part1.pdf.pdf" frameborder="0"></iframe>
+        </div>
+
+        <!-- PDF Viewer for Part 2 -->
+        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
+            <iframe id="part2-viewer" class="portfolio-frame rounded-lg" src="portfolio-part2.pdf.pdf" frameborder="0"></iframe>
+        </div>
+        
+        <!-- PDF Viewer for Part 3 -->
+        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
+            <iframe id="part3-viewer" class="portfolio-frame rounded-lg" src="portfolio-part3.pdf.pdf" frameborder="0"></iframe>
+        </div>
+
+        <!-- PDF Viewer for Part 4 -->
+        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
+            <iframe id="part4-viewer" class="portfolio-frame rounded-lg" src="portfolio-part4.pdf.pdf" frameborder="0"></iframe>
+        </div>
+
+        <!-- PDF Viewer for Part 5 -->
+        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
+            <iframe id="part5-viewer" class="portfolio-frame rounded-lg" src="portfolio-part5.pdf.pdf" frameborder="0"></iframe>
+        </div>
+
+        <!-- PDF Viewer for Part 6 -->
+        <div class="w-full max-w-5xl rounded-xl shadow-lg bg-gray-200">
+            <iframe id="part6-viewer" class="portfolio-frame rounded-lg" src="portfolio-part6.pdf.pdf" frameborder="0"></iframe>
+        </div>
+    </div>
 
     <script>
         const { PDFDocument } = PDFLib;
         const pdfFiles = [
-            'portfolio-part1.pdf',
-            'portfolio-part2.pdf',
-            'portfolio-part3.pdf',
-            'portfolio-part4.pdf',
-            'portfolio-part5.pdf',
-            'portfolio-part6.pdf'
+            'portfolio-part1.pdf.pdf',
+            'portfolio-part2.pdf.pdf',
+            'portfolio-part3.pdf.pdf',
+            'portfolio-part4.pdf.pdf',
+            'portfolio-part5.pdf.pdf',
+            'portfolio-part6.pdf.pdf'
         ];
-
-        // Function to update the PDF viewer and button styles
-        function showPortfolio(pdfUrl) {
-            const viewer = document.getElementById('portfolio-viewer');
-            const buttons = document.querySelectorAll('.portfolio-nav-button');
-
-            // Update the iframe source
-            viewer.src = pdfUrl;
-
-            // Update button styles to show which one is active
-            buttons.forEach(button => {
-                if (button.getAttribute('onclick').includes(pdfUrl)) {
-                    button.classList.add('bg-indigo-500', 'hover:bg-indigo-600', 'text-white');
-                    button.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'text-gray-800');
-                } else {
-                    button.classList.remove('bg-indigo-500', 'hover:bg-indigo-600', 'text-white');
-                    button.classList.add('bg-gray-300', 'hover:bg-gray-400', 'text-gray-800');
-                }
-            });
-        }
 
         // Function to combine and download the PDFs
         async function combineAndDownloadPdfs() {
@@ -131,11 +117,6 @@
 
         // Add event listener to the main download button
         document.getElementById('download-btn').addEventListener('click', combineAndDownloadPdfs);
-
-        // Load the first PDF on initial page load
-        document.addEventListener('DOMContentLoaded', () => {
-            showPortfolio(pdfFiles[0]);
-        });
     </script>
 </body>
 </html>
