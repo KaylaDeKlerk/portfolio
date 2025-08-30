@@ -63,13 +63,12 @@
             font-family: 'Playfair Display', serif;
         }
         .tangerine-font {
-            font-family: 'Poppins';
+            font-family: 'Arial';
         }
     </style>
 </head>
 <body class="bg-[#6b604c] text-[#8b7b62] flex flex-col items-center min-h-screen">
 
-    <!-- Sticky Header with Liquid Glass Effect -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-10 transition-opacity duration-500">
         <main class="w-full liquid-glass rounded-none shadow-lg p-6 md:p-10 text-center">
             <h1 class="text-3xl md:text-5xl font-bold mb-2 text-white playfair-font">Kayla de Klerk</h1>
@@ -79,7 +78,6 @@
                 <button id="download-btn" class="bg-[#745a46] hover:bg-[#8b7b62] text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
                     Download Portfolio PDF
                 </button>
-                <!-- Scaling Controls -->
                 <div class="flex flex-row justify-center items-center gap-2 text-sm text-[#8b7b62]">
                     <span class="text-white">Scale:</span>
                     <button id="scale-100-btn" class="py-1 px-3 rounded-full border border-[#8b7b62] hover:bg-[#745a46] transition-colors duration-300">100%</button>
@@ -90,15 +88,11 @@
         </main>
     </header>
     
-    <!-- Spacer to push content below the fixed header -->
     <div class="h-[250px] md:h-[220px]"></div>
 
-    <!-- Container for the PNG portfolio pages -->
     <div id="portfolio-container" class="w-full flex flex-col items-center">
-        <!-- Images will be dynamically loaded here -->
-    </div>
+        </div>
 
-    <!-- Modal for Project Details -->
     <div id="project-modal" class="modal-overlay">
         <div class="modal-content relative text-left">
             <button id="modal-close-btn" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
@@ -115,9 +109,7 @@
         </div>
     </div>
 
-    <!-- About and Contact Section -->
     <section class="w-full max-w-7xl mx-auto p-8 md:p-12 my-12 bg-[#745a46] rounded-2xl shadow-xl flex flex-col md:flex-row gap-8">
-        <!-- About Me Column -->
         <div class="w-full md:w-1/2">
             <h2 class="text-3xl font-bold mb-4 text-white">About Kayla</h2>
             <p class="text-base text-gray-200 leading-relaxed mb-4">I am a graphic designer, marketer, strategist and communications coordinator with 5 years of work experience. I strive for perfection and value in the work I do. I am diligent when it comes to the ideation and organisation/management of tasks and projects. I am approachable and enjoy a creative and like-minded team.</p>
@@ -131,7 +123,6 @@
             </div>
         </div>
 
-        <!-- Skills and Contact Column -->
         <div class="w-full md:w-1/2">
             <h3 class="text-xl font-semibold mb-2 text-white">Proficiencies</h3>
             <ul class="list-disc list-inside text-gray-200 text-sm mb-6 grid grid-cols-1 sm:grid-cols-2 gap-1">
@@ -164,25 +155,47 @@
         }
         // ----------------------------------------------------
 
-        // Function to dynamically load and display PNGs
-        function loadPortfolioImages() {
+        // Function to dynamically load and display PNGs sequentially
+        function loadPortfolioImagesSequentially() {
             const container = document.getElementById('portfolio-container');
-            portfolioPages.forEach((page, index) => {
-                const img = document.createElement('img');
+            let i = 0;
+
+            function loadNextImage() {
+                if (i >= portfolioPages.length) {
+                    return; // All images have been loaded
+                }
+
+                const page = portfolioPages[i];
+                const img = new Image(); // Use the Image constructor for better loading control
                 img.src = `portfolioImages/${page}`;
                 img.alt = `Portfolio Page ${page}`;
                 img.classList.add('w-full', 'mb-0', 'p-0', 'project-image');
                 
                 // Add conditional rounding to the last image to match the section below it
-                if (index === portfolioPages.length - 1) {
+                if (i === portfolioPages.length - 1) {
                     img.classList.add('rounded-b-2xl');
                 } else {
                     img.classList.add('rounded-none');
                 }
 
-                img.dataset.pageNumber = page; // Store page number for the modal
-                container.appendChild(img);
-            });
+                img.onload = () => {
+                    // This code runs only after the image is fully loaded
+                    container.appendChild(img);
+                    img.dataset.pageNumber = page; // Store page number for the modal
+                    i++;
+                    loadNextImage(); // Load the next image
+                    setScale(50); // Re-apply the scale to the newly loaded image
+                };
+
+                img.onerror = () => {
+                    console.error(`Failed to load image: ${img.src}`);
+                    i++;
+                    loadNextImage(); // Try to load the next one even if this one failed
+                };
+            }
+
+            // Start the loading process
+            loadNextImage();
         }
 
         // Function to combine PNGs into a single PDF for download
@@ -276,10 +289,8 @@
 
         // Load images and set up scroll listener on page load
         window.onload = () => {
-            loadPortfolioImages();
-            setScale(50);
+            loadPortfolioImagesSequentially();
             window.addEventListener('scroll', handleScroll);
-            // addImageEventListeners(); // Removed as requested
         };
 
         // Add event listener to the main download button
