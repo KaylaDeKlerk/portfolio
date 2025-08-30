@@ -65,6 +65,21 @@
         .tangerine-font {
             font-family: 'Arial';
         }
+        /* Loading indicator specific styles */
+        .loading-indicator {
+            padding: 1.5rem 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem; /* Added margin-bottom to keep it off the About section */
+            border-radius: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            display: none; /* Hidden by default */
+        }
+        .loading-indicator.active {
+            display: block; /* Shown when active */
+        }
     </style>
 </head>
 <body class="bg-[#6b604c] text-[#8b7b62] flex flex-col items-center min-h-screen">
@@ -91,7 +106,10 @@
     <div class="h-[250px] md:h-[220px]"></div>
 
     <div id="portfolio-container" class="w-full flex flex-col items-center">
+        <div id="loading-indicator" class="loading-indicator liquid-glass w-11/12 max-w-7xl animate-pulse">
+            Loading images... ⏳
         </div>
+    </div>
 
     <div id="project-modal" class="modal-overlay">
         <div class="modal-content relative text-left">
@@ -147,7 +165,7 @@
 
     <script>
         const { PDFDocument } = PDFLib;
-        let currentScale = 75; // Define a global variable to track the current scale
+        let currentScale = 75; // Default scale set to 75%
 
         // --- Updated to include 41 PNG images ---
         const portfolioPages = [];
@@ -159,11 +177,17 @@
         // Function to dynamically load and display PNGs sequentially
         function loadPortfolioImagesSequentially() {
             const container = document.getElementById('portfolio-container');
+            const loadingIndicator = document.getElementById('loading-indicator');
             let i = 0;
+
+            // Show loading indicator when image loading starts
+            loadingIndicator.classList.add('active');
 
             function loadNextImage() {
                 if (i >= portfolioPages.length) {
-                    return; // All images have been loaded
+                    // All images have been loaded
+                    loadingIndicator.classList.remove('active'); // Hide loading indicator
+                    return;
                 }
 
                 const page = portfolioPages[i];
@@ -181,11 +205,12 @@
 
                 img.onload = () => {
                     // This code runs only after the image is fully loaded
-                    container.appendChild(img);
+                    // Insert the image before the loading indicator
+                    container.insertBefore(img, loadingIndicator); 
                     img.dataset.pageNumber = page; // Store page number for the modal
                     i++;
+                    setScale(currentScale); // Use the global variable to set the scale for the new image
                     loadNextImage(); // Load the next image
-                    setScale(currentScale); // Use the global variable to set the scale
                 };
 
                 img.onerror = () => {
