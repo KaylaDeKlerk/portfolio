@@ -72,7 +72,7 @@
     <header id="main-header" class="fixed top-0 left-0 w-full z-10 transition-opacity duration-500">
         <main class="w-full liquid-glass rounded-none shadow-lg p-6 md:p-10 text-center">
             <h1 class="text-3xl md:text-5xl font-bold mb-2 text-white playfair-font">Kayla de Klerk</h1>
-            <p class="text-2xl md:text-3xl font-medium mb-6 text-gray-200 tangerine-font">My latest graphic design portfolio</p>
+            <p class="text-xl md:text-2xl font-medium mb-6 text-gray-200 tangerine-font">My latest graphic design portfolio</p>
 
             <div class="flex flex-col md:flex-row justify-center items-center gap-4 flex-wrap">
                 <button id="download-btn" class="bg-[#745a46] hover:bg-[#8b7b62] text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
@@ -147,6 +147,7 @@
 
     <script>
         const { PDFDocument } = PDFLib;
+        let currentScale = 100; // Define a global variable to track the current scale
 
         // --- Updated to include 41 PNG images ---
         const portfolioPages = [];
@@ -184,7 +185,7 @@
                     img.dataset.pageNumber = page; // Store page number for the modal
                     i++;
                     loadNextImage(); // Load the next image
-                    setScale(100); // Re-apply the scale to the newly loaded image
+                    setScale(currentScale); // Use the global variable to set the scale
                 };
 
                 img.onerror = () => {
@@ -247,6 +248,7 @@
 
         // Function to handle scaling
         function setScale(percentage) {
+            currentScale = percentage; // Update the global variable
             const images = document.querySelectorAll('#portfolio-container img');
             images.forEach(img => {
                 img.style.width = `${percentage}%`;
