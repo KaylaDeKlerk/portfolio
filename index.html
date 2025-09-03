@@ -21,7 +21,6 @@
         -webkit-backdrop-filter: blur(8px);
         background-color: rgba(116, 90, 70, 0.5);
     }
-    /* Updated styles for .project-image */
     .project-image {
         cursor: default;
         transition: none;
@@ -72,16 +71,16 @@
     .loading-indicator {
         padding: 1.5rem 2rem;
         margin-top: 2rem;
-        margin-bottom: 2rem; /* Added margin-bottom to keep it off the About section */
+        margin-bottom: 2rem;
         border-radius: 1rem;
         text-align: center;
         font-size: 1.5rem;
         font-weight: bold;
         color: #ffffff;
-        display: none; /* Hidden by default */
+        display: none;
     }
     .loading-indicator.active {
-        display: block; /* Shown when active */
+        display: block;
     }
     </style>
 </head>
@@ -202,8 +201,15 @@
                 img.alt = `Portfolio Page ${page}`;
                 img.classList.add('w-full', 'mb-0', 'p-0', 'project-image', 'portfolio-item');
                 
-                // Add conditional rounding to the last image to match the section below it
-                if (i === portfolioPages.length - 1) {
+                // Dynamically add corner rounding based on video placement
+                const isBeforeVideo = (i === 4 || i === 12);
+                const isAfterVideo = (i === 5 || i === 13);
+                
+                if (isBeforeVideo) {
+                    img.classList.add('rounded-b-2xl');
+                } else if (isAfterVideo) {
+                    img.classList.add('rounded-t-2xl');
+                } else if (i === portfolioPages.length - 1) {
                     img.classList.add('rounded-b-2xl');
                 } else {
                     img.classList.add('rounded-none');
@@ -211,53 +217,42 @@
 
                 img.onload = () => {
                     // This code runs only after the image is fully loaded
-                    // Insert the image before the loading indicator
                     container.insertBefore(img, loadingIndicator); 
                     img.dataset.pageNumber = page; // Store page number for the modal
                     i++;
 
-                    // Embed LinkedIn link after page 5
-                    if (i === 5) {
-                        const videoContainerLinkedIn = document.createElement('div');
-                        videoContainerLinkedIn.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item');
-                        const iframeLinkedIn = document.createElement('iframe');
-                        iframeLinkedIn.src = "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7368296580866605058?compact=1";
-                        iframeLinkedIn.title = "LinkedIn Video";
-                        iframeLinkedIn.frameborder = "0";
-                        iframeLinkedIn.allow = "fullscreen";
-                        iframeLinkedIn.allowfullscreen = true;
-                        iframeLinkedIn.classList.add('w-full', 'h-full', 'rounded-2xl', 'overflow-hidden');
-                        videoContainerLinkedIn.appendChild(iframeLinkedIn);
-                        container.insertBefore(videoContainerLinkedIn, loadingIndicator);
-                    }
-                    
-                    // Embed YouTube videos after page 13
-                    if (i === 13) {
-                        // KnetMiner Explained video
-                        const videoContainer1 = document.createElement('div');
-                        videoContainer1.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item');
-                        const iframe1 = document.createElement('iframe');
-                        iframe1.src = "https://www.youtube.com/embed/F8OYhzWQn5Q";
-                        iframe1.title = "YouTube video player";
-                        iframe1.frameborder = "0";
-                        iframe1.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                        iframe1.allowfullscreen = true;
-                        iframe1.classList.add('w-full', 'h-full', 'rounded-2xl', 'overflow-hidden');
-                        videoContainer1.appendChild(iframe1);
-                        container.insertBefore(videoContainer1, loadingIndicator);
+                    // Embed videos after specific images
+                    if (isBeforeVideo) {
+                        const videoContainer = document.createElement('div');
+                        videoContainer.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item', 'rounded-2xl', 'overflow-hidden');
+                        const videoIframe = document.createElement('iframe');
 
-                        // KnetMiner Nova Announcement video
-                        const videoContainer2 = document.createElement('div');
-                        videoContainer2.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item');
-                        const iframe2 = document.createElement('iframe');
-                        iframe2.src = "https://www.youtube.com/embed/bFKS3ob77vk";
-                        iframe2.title = "KnetMiner Nova Announcement Video";
-                        iframe2.frameborder = "0";
-                        iframe2.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                        iframe2.allowfullscreen = true;
-                        iframe2.classList.add('w-full', 'h-full', 'rounded-2xl', 'overflow-hidden');
-                        videoContainer2.appendChild(iframe2);
-                        container.insertBefore(videoContainer2, loadingIndicator);
+                        if (i === 5) { // LinkedIn video after image 5
+                            videoIframe.src = "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7368296580866605058?compact=1";
+                            videoIframe.title = "LinkedIn Video";
+                        } else if (i === 13) { // Two YouTube videos after image 13
+                            videoIframe.src = "https://www.youtube.com/embed/F8OYhzWQn5Q";
+                            videoIframe.title = "YouTube video player";
+                            
+                            const videoContainer2 = document.createElement('div');
+                            videoContainer2.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item', 'rounded-2xl', 'overflow-hidden');
+                            const iframe2 = document.createElement('iframe');
+                            iframe2.src = "https://www.youtube.com/embed/bFKS3ob77vk";
+                            iframe2.title = "KnetMiner Nova Announcement Video";
+                            iframe2.frameborder = "0";
+                            iframe2.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+                            iframe2.allowfullscreen = true;
+                            iframe2.classList.add('w-full', 'h-full');
+                            videoContainer2.appendChild(iframe2);
+                            container.insertBefore(videoContainer2, loadingIndicator);
+                        }
+                        
+                        videoIframe.frameborder = "0";
+                        videoIframe.allow = "fullscreen";
+                        videoIframe.allowfullscreen = true;
+                        videoIframe.classList.add('w-full', 'h-full');
+                        videoContainer.appendChild(videoIframe);
+                        container.insertBefore(videoContainer, loadingIndicator);
                     }
 
                     setScale(currentScale); // Use the global variable to set the scale for the new element
@@ -284,7 +279,6 @@
             try {
                 const combinedPdf = await PDFDocument.create();
                 
-                // Filter out the video placeholder when creating the PDF
                 const pagesToInclude = portfolioPages.filter(page => page !== 'video_placeholder');
 
                 for (const pageName of pagesToInclude) {
