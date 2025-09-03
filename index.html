@@ -83,7 +83,7 @@
     .loading-indicator.active {
         display: block; /* Shown when active */
     }
-</style>
+    </style>
 </head>
 <body class="bg-[#6b604c] text-[#8b7b62] flex flex-col items-center min-h-screen">
 
@@ -93,9 +93,12 @@
             <p class="text-xl md:text-2xl font-medium mb-6 text-gray-200 tangerine-font">My latest graphic design portfolio</p>
 
             <div class="flex flex-col md:flex-row justify-center items-center gap-4 flex-wrap">
-                <button id="download-btn" class="bg-[#745a46] hover:bg-[#8b7b62] text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
-                    Download Portfolio PDF
-                </button>
+                <div class="flex flex-col items-center">
+                    <button id="download-btn" class="bg-[#745a46] hover:bg-[#8b7b62] text-white font-semibold py-3 px-6 rounded-full shadow-md transition-colors duration-300">
+                        Download Portfolio PDF
+                    </button>
+                    <p class="text-xs text-gray-200 mt-2">Embedded videos are excluded</p>
+                </div>
                 <div class="flex flex-row justify-center items-center gap-2 text-sm text-[#8b7b62]">
                     <span class="text-white">Scale:</span>
                     <button id="scale-100-btn" class="py-1 px-3 rounded-full border border-[#8b7b62] hover:bg-[#745a46] transition-colors duration-300">100%</button>
@@ -197,7 +200,7 @@
                 const img = new Image(); // Use the Image constructor for better loading control
                 img.src = `portfolioImages/${page}`;
                 img.alt = `Portfolio Page ${page}`;
-                img.classList.add('w-full', 'mb-0', 'p-0', 'project-image');
+                img.classList.add('w-full', 'mb-0', 'p-0', 'project-image', 'portfolio-item');
                 
                 // Add conditional rounding to the last image to match the section below it
                 if (i === portfolioPages.length - 1) {
@@ -212,7 +215,52 @@
                     container.insertBefore(img, loadingIndicator); 
                     img.dataset.pageNumber = page; // Store page number for the modal
                     i++;
-                    setScale(currentScale); // Use the global variable to set the scale for the new image
+
+                    // Embed LinkedIn link after page 5
+                    if (i === 5) {
+                        const videoContainerLinkedIn = document.createElement('div');
+                        videoContainerLinkedIn.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item');
+                        const iframeLinkedIn = document.createElement('iframe');
+                        iframeLinkedIn.src = "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7368296580866605058?compact=1";
+                        iframeLinkedIn.title = "LinkedIn Video";
+                        iframeLinkedIn.frameborder = "0";
+                        iframeLinkedIn.allow = "fullscreen";
+                        iframeLinkedIn.allowfullscreen = true;
+                        iframeLinkedIn.classList.add('w-full', 'h-full', 'rounded-2xl', 'overflow-hidden');
+                        videoContainerLinkedIn.appendChild(iframeLinkedIn);
+                        container.insertBefore(videoContainerLinkedIn, loadingIndicator);
+                    }
+                    
+                    // Embed YouTube videos after page 13
+                    if (i === 13) {
+                        // KnetMiner Explained video
+                        const videoContainer1 = document.createElement('div');
+                        videoContainer1.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item');
+                        const iframe1 = document.createElement('iframe');
+                        iframe1.src = "https://www.youtube.com/embed/F8OYhzWQn5Q";
+                        iframe1.title = "YouTube video player";
+                        iframe1.frameborder = "0";
+                        iframe1.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+                        iframe1.allowfullscreen = true;
+                        iframe1.classList.add('w-full', 'h-full', 'rounded-2xl', 'overflow-hidden');
+                        videoContainer1.appendChild(iframe1);
+                        container.insertBefore(videoContainer1, loadingIndicator);
+
+                        // KnetMiner Nova Announcement video
+                        const videoContainer2 = document.createElement('div');
+                        videoContainer2.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item');
+                        const iframe2 = document.createElement('iframe');
+                        iframe2.src = "https://www.youtube.com/embed/bFKS3ob77vk";
+                        iframe2.title = "KnetMiner Nova Announcement Video";
+                        iframe2.frameborder = "0";
+                        iframe2.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+                        iframe2.allowfullscreen = true;
+                        iframe2.classList.add('w-full', 'h-full', 'rounded-2xl', 'overflow-hidden');
+                        videoContainer2.appendChild(iframe2);
+                        container.insertBefore(videoContainer2, loadingIndicator);
+                    }
+
+                    setScale(currentScale); // Use the global variable to set the scale for the new element
                     loadNextImage(); // Load the next image
                 };
 
@@ -235,8 +283,11 @@
 
             try {
                 const combinedPdf = await PDFDocument.create();
+                
+                // Filter out the video placeholder when creating the PDF
+                const pagesToInclude = portfolioPages.filter(page => page !== 'video_placeholder');
 
-                for (const pageName of portfolioPages) {
+                for (const pageName of pagesToInclude) {
                     const url = `portfolioImages/${pageName}`;
                     const response = await fetch(url);
                     if (!response.ok) {
@@ -277,10 +328,10 @@
         // Function to handle scaling
         function setScale(percentage) {
             currentScale = percentage; // Update the global variable
-            const images = document.querySelectorAll('#portfolio-container img');
-            images.forEach(img => {
-                img.style.width = `${percentage}%`;
-                img.style.maxWidth = `${percentage}%`;
+            const items = document.querySelectorAll('#portfolio-container .portfolio-item');
+            items.forEach(item => {
+                item.style.width = `${percentage}%`;
+                item.style.maxWidth = `${percentage}%`;
             });
         }
 
