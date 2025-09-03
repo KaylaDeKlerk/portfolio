@@ -202,12 +202,14 @@
                 img.classList.add('w-full', 'mb-0', 'p-0', 'project-image', 'portfolio-item');
                 
                 // Dynamically add corner rounding based on video placement
-                const isBeforeVideo = (i === 4 || i === 12);
-                const isAfterVideo = (i === 5 || i === 13);
+                const isBeforeLinkedInVideo = (i === 4);
+                const isBeforeYouTubeVideo = (i === 12);
+                const isAfterLinkedInVideo = (i === 5);
+                const isAfterYouTubeVideo = (i === 13);
                 
-                if (isBeforeVideo) {
+                if (isBeforeLinkedInVideo || isBeforeYouTubeVideo) {
                     img.classList.add('rounded-b-2xl');
-                } else if (isAfterVideo) {
+                } else if (isAfterLinkedInVideo || isAfterYouTubeVideo) {
                     img.classList.add('rounded-t-2xl');
                 } else if (i === portfolioPages.length - 1) {
                     img.classList.add('rounded-b-2xl');
@@ -221,34 +223,30 @@
                     img.dataset.pageNumber = page; // Store page number for the modal
                     i++;
 
-                    // Embed videos after specific images
-                    if (isBeforeVideo) {
+                    // Embed LinkedIn video after image 5
+                    if (i === 5) {
                         const videoContainer = document.createElement('div');
                         videoContainer.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item', 'rounded-2xl', 'overflow-hidden');
                         const videoIframe = document.createElement('iframe');
-
-                        if (i === 5) { // LinkedIn video after image 5
-                            videoIframe.src = "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7368296580866605058?compact=1";
-                            videoIframe.title = "LinkedIn Video";
-                        } else if (i === 13) { // Two YouTube videos after image 13
-                            videoIframe.src = "https://www.youtube.com/embed/F8OYhzWQn5Q";
-                            videoIframe.title = "YouTube video player";
-                            
-                            const videoContainer2 = document.createElement('div');
-                            videoContainer2.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item', 'rounded-2xl', 'overflow-hidden');
-                            const iframe2 = document.createElement('iframe');
-                            iframe2.src = "https://www.youtube.com/embed/bFKS3ob77vk";
-                            iframe2.title = "KnetMiner Nova Announcement Video";
-                            iframe2.frameborder = "0";
-                            iframe2.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                            iframe2.allowfullscreen = true;
-                            iframe2.classList.add('w-full', 'h-full');
-                            videoContainer2.appendChild(iframe2);
-                            container.insertBefore(videoContainer2, loadingIndicator);
-                        }
-                        
+                        videoIframe.src = "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7368296580866605058?compact=1";
+                        videoIframe.title = "LinkedIn Video";
                         videoIframe.frameborder = "0";
                         videoIframe.allow = "fullscreen";
+                        videoIframe.allowfullscreen = true;
+                        videoIframe.classList.add('w-full', 'h-full');
+                        videoContainer.appendChild(videoIframe);
+                        container.insertBefore(videoContainer, loadingIndicator);
+                    }
+
+                    // Embed the remaining YouTube video after image 13
+                    if (i === 13) {
+                        const videoContainer = document.createElement('div');
+                        videoContainer.classList.add('w-full', 'max-w-7xl', 'aspect-video', 'mb-4', 'portfolio-item', 'rounded-2xl', 'overflow-hidden');
+                        const videoIframe = document.createElement('iframe');
+                        videoIframe.src = "https://www.youtube.com/embed/bFKS3ob77vk";
+                        videoIframe.title = "KnetMiner Nova Announcement Video";
+                        videoIframe.frameborder = "0";
+                        videoIframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
                         videoIframe.allowfullscreen = true;
                         videoIframe.classList.add('w-full', 'h-full');
                         videoContainer.appendChild(videoIframe);
